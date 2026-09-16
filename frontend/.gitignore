@@ -1,0 +1,14 @@
+node_modules
+.next
+out
+build
+.env
+.env.local
+.env.*.local
+npm-debug.log*
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts.timestamp
+coverage
+supabase/.branches
+supabase/.temp

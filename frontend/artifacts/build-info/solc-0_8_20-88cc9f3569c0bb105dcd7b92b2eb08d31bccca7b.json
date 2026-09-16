@@ -1,0 +1,42 @@
+{
+  "_format": "hh3-sol-build-info-1",
+  "id": "solc-0_8_20-88cc9f3569c0bb105dcd7b92b2eb08d31bccca7b",
+  "solcVersion": "0.8.20",
+  "solcLongVersion": "0.8.20+commit.a1b79de6",
+  "compilerType": "solc",
+  "userSourceNameMap": {
+    "contracts/CitiFixRegistry.sol": "project/contracts/CitiFixRegistry.sol"
+  },
+  "input": {
+    "language": "Solidity",
+    "settings": {
+      "evmVersion": "shanghai",
+      "outputSelection": {
+        "*": {
+          "": [
+            "ast"
+          ],
+          "*": [
+            "abi",
+            "evm.bytecode.linkReferences",
+            "evm.bytecode.object",
+            "evm.bytecode.opcodes",
+            "evm.bytecode.sourceMap",
+            "evm.deployedBytecode.immutableReferences",
+            "evm.deployedBytecode.linkReferences",
+            "evm.deployedBytecode.object",
+            "evm.deployedBytecode.opcodes",
+            "evm.deployedBytecode.sourceMap",
+            "evm.methodIdentifiers"
+          ]
+        }
+      },
+      "remappings": []
+    },
+    "sources": {
+      "project/contracts/CitiFixRegistry.sol": {
+        "content": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.20;\r\n\r\n/**\r\n * @title CivicProofRegistry\r\n * @notice On-chain registry for complaint proof hashes.\r\n *\r\n * Stores a canonical record hash + metadata URI for each complaint,\r\n * enabling tamper detection. No PII is ever stored on-chain —\r\n * only the complaint ID, record hash, timestamp, and data URI.\r\n */\r\ncontract CivicProofRegistry {\r\n  struct Proof {\r\n    bytes32 recordHash;\r\n    uint256 timestamp;\r\n    string  dataUri;\r\n    address anchoredBy;\r\n    bool    exists;\r\n  }\r\n\r\n  // complaintId => Proof\r\n  mapping(string => Proof) public proofs;\r\n\r\n  event ProofAnchored(\r\n    string indexed complaintId,\r\n    bytes32 indexed recordHash,\r\n    uint256 timestamp,\r\n    address anchoredBy\r\n  );\r\n\r\n  event ProofVerified(\r\n    string indexed complaintId,\r\n    bool valid\r\n  );\r\n\r\n  /**\r\n   * @notice Anchor a record hash for a complaint.\r\n   * @param complaintId The CP-YYYY-NNNN identifier.\r\n   * @param recordHash  The SHA-256 hash of the canonical complaint record.\r\n   * @param dataUri     Off-chain data reference (IPFS URI, HTTP URL, etc.).\r\n   */\r\n  function anchorProof(\r\n    string calldata complaintId,\r\n    bytes32 recordHash,\r\n    string calldata dataUri\r\n  ) external {\r\n    require(!proofs[complaintId].exists, \"Proof already anchored\");\r\n    require(bytes(complaintId).length > 0, \"Empty complaint ID\");\r\n    require(recordHash != bytes32(0), \"Empty record hash\");\r\n\r\n    proofs[complaintId] = Proof({\r\n      recordHash: recordHash,\r\n      timestamp:  block.timestamp,\r\n      dataUri:    dataUri,\r\n      anchoredBy: msg.sender,\r\n      exists:     true\r\n    });\r\n\r\n    emit ProofAnchored(complaintId, recordHash, block.timestamp, msg.sender);\r\n  }\r\n\r\n  /**\r\n   * @notice Verify a complaint's record hash matches the anchored value.\r\n   * @param complaintId The CP-YYYY-NNNN identifier.\r\n   * @param recordHash  The hash to verify against.\r\n   * @return valid True if the hashes match.\r\n   */\r\n  function verifyProof(\r\n    string calldata complaintId,\r\n    bytes32 recordHash\r\n  ) external view returns (bool valid) {\r\n    Proof storage p = proofs[complaintId];\r\n    if (!p.exists) return false;\r\n    return p.recordHash == recordHash;\r\n  }\r\n\r\n  /**\r\n   * @notice Get full proof details for a complaint.\r\n   * @param complaintId The CP-YYYY-NNNN identifier.\r\n   */\r\n  function getProof(string calldata complaintId)\r\n    external\r\n    view\r\n    returns (\r\n      bytes32 recordHash,\r\n      uint256 timestamp,\r\n      string  memory dataUri,\r\n      address anchoredBy,\r\n      bool    exists\r\n    )\r\n  {\r\n    Proof storage p = proofs[complaintId];\r\n    return (p.recordHash, p.timestamp, p.dataUri, p.anchoredBy, p.exists);\r\n  }\r\n}\r\n"
+      }
+    }
+  }
+}

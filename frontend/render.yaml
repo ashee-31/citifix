@@ -1,0 +1,21 @@
+{
+  "$schema": "https://render.com/schema/schema.json",
+  "services": [
+    {
+      "type": "web",
+      "name": "citifix-frontend",
+      "env": "node",
+      "plan": "free",
+      "buildCommand": "npm install && npm run build",
+      "startCommand": "npm start",
+      "healthCheckPath": "/",
+      "envVars": [
+        { "key": "NODE_ENV", "value": "production" },
+        { "key": "NEXT_PUBLIC_APP_URL", "fromService": { "type": "web", "name": "citifix-frontend", "envVarKey": "RENDER_EXTERNAL_URL" } },
+        { "key": "NEXT_PUBLIC_API_URL", "sync": false },
+        { "key": "NEXT_PUBLIC_SUPABASE_URL", "sync": false },
+        { "key": "NEXT_PUBLIC_SUPABASE_ANON_KEY", "sync": false }
+      ]
+    }
+  ]
+}

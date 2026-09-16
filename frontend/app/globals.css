@@ -1,0 +1,120 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 264 30% 6%;
+    --foreground: 264 40% 96%;
+    --card: 264 32% 9%;
+    --card-foreground: 264 40% 96%;
+    --popover: 264 35% 8%;
+    --popover-foreground: 264 40% 96%;
+    --primary: 260 100% 83%;
+    --primary-foreground: 264 50% 10%;
+    --secondary: 262 35% 24%;
+    --secondary-foreground: 264 40% 96%;
+    --muted: 264 25% 15%;
+    --muted-foreground: 264 12% 62%;
+    --accent: 260 40% 18%;
+    --accent-foreground: 264 40% 96%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 264 25% 18%;
+    --input: 264 25% 18%;
+    --ring: 260 100% 83%;
+    --radius: 0.75rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    background-color: #0c0b13;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 20% -10%, rgba(102, 78, 174, 0.28), transparent),
+      radial-gradient(ellipse 60% 40% at 90% 110%, rgba(26, 5, 84, 0.55), transparent);
+    background-attachment: fixed;
+  }
+
+  ::selection {
+    background-color: rgba(196, 168, 255, 0.35);
+    color: #ffffff;
+  }
+
+  :focus-visible {
+    outline: 2px solid #c4a8ff;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply border border-white/10 bg-white/[0.03] backdrop-blur-xl;
+  }
+
+  .text-glow {
+    text-shadow: 0 0 24px rgba(196, 168, 255, 0.45);
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Leaflet dark theme overrides */
+.leaflet-container {
+  background-color: #0c0b13 !important;
+  font-family: inherit;
+}
+.leaflet-tile-pane {
+  filter: brightness(0.55) contrast(1.15) saturate(0.7) invert(1) hue-rotate(210deg);
+}
+.leaflet-control-attribution {
+  background: rgba(12, 11, 19, 0.7) !important;
+  color: rgba(196, 168, 255, 0.5) !important;
+  font-size: 10px !important;
+}
+.leaflet-control-attribution a {
+  color: rgba(196, 168, 255, 0.7) !important;
+}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: #14121f !important;
+  color: #f4f1fb !important;
+  border: 1px solid rgba(196, 168, 255, 0.25);
+}
+.leaflet-control-zoom a {
+  background: #14121f !important;
+  color: #c4a8ff !important;
+  border-color: rgba(196, 168, 255, 0.2) !important;
+}
+.leaflet-control-zoom a:hover {
+  background: #1a0554 !important;
+}
+.leaflet-bar {
+  border: 1px solid rgba(196, 168, 255, 0.2) !important;
+}
